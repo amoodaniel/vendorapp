@@ -1,0 +1,62 @@
+<html>
+  <%- include('partials/header'); -%>
+  <body>
+
+    <ul class="recipes">
+    <% response.reverse().forEach((item) => { %>
+      <li class="recipe">
+        <p id="item-id" hidden style="visibility: hidden;"><%-item._id%><p>
+        <img src="/smoothie.png" alt="smoothie recipe icon">
+        <h4 id="item-name"><%-item.name %></h4>
+        <p id="item-description"><%-item.description%></p>
+        <p id="item-price"><%-item.price%></p>
+        <button id="cart-btn">Add to cart</button>
+      </li>
+      <% }); %>
+    </ul>
+  </body>
+
+
+
+<script>
+  const allItems = document.querySelector('.recipes');
+  for (let item of allItems.children){
+    const li = item
+    const itemPrice= Array.from(li.children).find( el => el.id === 'item-price')
+    const itemId = Array.from(li.children).find( el => el.id === 'item-id')
+    const itemButton = Array.from(li.children).find( el => el.id === 'cart-btn')
+    const itemName = Array.from(li.children).find( el => el.id === 'item-name')
+    itemButton.onclick = function () {
+      addToCart(itemId.textContent, {name: itemName.textContent, price: itemPrice.textContent})
+  }
+}
+
+function addToCart(id, item) {
+  console.log(localStorage.getItem('cart'))
+  var cart = JSON.parse(localStorage.getItem('cart') || "[]")
+  const {name, price} = item;
+  let itemToAdd = {
+    id,
+    name, 
+    quantity: 1,
+    price,
+  }
+  // for duplicate items: increase the quantity
+  let existingItem = cart.find(item => item.id.toString() == itemToAdd.id.toString());
+
+  if(existingItem) {
+    existingItem.quantity += 1;
+  }else {
+    cart.push(itemToAdd)
+  }
+  
+  localStorage.setItem('cart', JSON.stringify(cart))
+}
+
+  // for(let item of cartusr){
+  //   console.log(item)
+  // }
+</script>
+
+<%- include('partials/footer'); -%>
+</html>

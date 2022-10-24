@@ -1,0 +1,64 @@
+<%- include('partials/header'); -%>
+
+<form >
+    <h2>Post Product</h2>
+    <label for = "Productname">Product Name</label>
+    <input type="text" name="productname" required/>
+    <div class="productname error"></div>
+    <label for = "price">Price</label>
+    <input type="number" name="price" required/>
+    <div class="price error"></div>
+    <label for = "price">Description</label>
+    <textarea name="description" required> </textarea>
+    <div class ="description"></div>
+    <button id="<%=user.email%>">Post Product</button> 
+
+</form>
+
+<script>
+    const form = document.querySelector('form');
+    const productnameerr =document.querySelector('.productname.error');
+    const priceerr =document.querySelector('.price.error');
+    const usermail =document.getElementsByTagName('button')[0].id
+
+    const creator = usermail
+
+
+    form.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+
+        //reset errors
+        productnameerr.textContent="";
+        priceerr.textContent="";
+
+        //get the values
+        const name = form.productname.value;
+        const price = form.price.value;
+        const description =form.description.value;
+        // const email = "";+
+        
+
+        try {
+            const res = await fetch('/postproduct',{
+                method:'POST',
+                body: JSON.stringify({name, description,price,creator}),
+                headers:{'Content-Type': 'application/json'}
+            });
+            const data = await res.json();
+            console.log(data);
+            if(data.type === "success") return window.location = "/smoothies"
+            
+            if (data.err){
+                productnameerr.textContent=data.err.productname;
+                priceerr.textContent=data.err.price;
+            }
+            if (data.product){
+                location.assign('/smoothies');
+            }
+        } catch (error){
+            console.log(error);
+        }
+    });
+</script>
+
+<%- include('partials/footer'); -%>

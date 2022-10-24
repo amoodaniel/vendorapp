@@ -1,0 +1,156 @@
+<html>
+  <%- include('partials/header'); -%>
+  <body>
+    <div class = "small-container cart-page">
+        <table id="checkout-items">
+            <tr>
+                <td>Product</td>
+                <td>Quantity</td>
+                <td> Sub Total</td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="cart-info">
+                        <img src="public\smoothie.png">
+                        <div>
+                            <p>Red Printed Tshirt</p>
+                            <small>Price: $50.00</small>
+                            <a href="">Remove</a>
+                        </div>
+                    </div>
+                </td>
+                <td><input type="number" value="1"></td>
+                <td>10045</td>
+            </tr>
+        </table>
+        <div class="total-price">
+            <table>
+                <tr>
+                    <td>Subtotal</td>
+                    <td>10450</td>
+                </tr>
+                <tr>
+                    <td>Tax</td>
+                    <td>10450</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td>10450</td>
+                </tr>
+            </table>
+
+        </div>
+
+    </div>
+
+  </body>
+
+  <%- include('partials/footer'); -%>
+
+<script>
+    let cart;
+    function RetrieveCartItems(){
+        cart = cart || localStorage.getItem('cart')
+    }
+    function displayCartItems(){
+        // console.log('here')
+        // var cartdet = JSON.parse(cartusr)
+        // cartdet = 
+        // console.log(cartdet)
+
+
+        // const increasePrice = function (quantity) {
+
+        // }
+        // const decreasePrice = function (quantity) {
+
+        // }
+        
+        var itemsInCart = JSON.parse(localStorage.getItem('cart'))
+        // create a table with js
+
+        const table = document.getElementById('checkout-items');
+        
+        const tbody = document.createElement('tbody');
+        
+        table.appendChild(tbody)
+        console.log({table})
+
+        for ( let item of itemsInCart ) {
+            // create a new row in tbody 
+            const row = document.createElement('tr');
+            const fieldsTest = Object.entries(item).forEach(
+                ([key, value]) => {
+                    console.log(key)
+                    if(key !== 'id') {
+                        if(key == 'quantity') {
+                            const quantityField = document.createElement('span')
+                            const increase = document.createElement('button')
+                            const decrease = document.createElement('button')
+                            increase.textContent = "+"
+                            decrease.textContent = "-"
+                            // increase.onclick = function () {
+                            //     increasePrice(value)
+                            // }
+                            // decrease.onclick = function () {
+                            //     decreasePrice(value)
+                            // }
+                            quantityField.textContent = value
+                            quantityField.appendChild(increase)
+                            quantityField.appendChild(decrease)
+                            row.appendChild(quantityField)
+                        } 
+                        if (key == 'name') {
+                            const nameField = document.createElement('td')
+                            nameField.textContent = value
+                            row.appendChild(nameField)
+                        }
+                        if (key == 'price') {
+                            const priceField = document.createElement('td');
+                            priceField.textContent = value
+                            row.appendChild(priceField)
+                        }
+                    }
+                }
+            )
+            // const fields = Object.values(item).map(
+            //     itemValue => {
+            //         const field = document.createElement('td');
+            //         const field2 = document.createElement(' ');
+            //         field2.className="cart-info";
+            //         field.textContent = itemValue;
+            //         field.appendChild(field2)
+            //         row.appendChild(field)
+                    
+            //     }
+            // )
+
+            // const fields = Object.values(item);
+            // const field1 = document.createElement('td');
+            // field1.textContent = fields[1];
+            // const field = document.createElement('td');
+            // field.textContent = fields[1];
+            // row.appendChild(field1)
+            // row.appendChild(fields[2])
+
+            // Object.entries(items).map(
+            //     ([itemKey, itemValue]) => {
+            //         console.log("here")
+            //         if(itemKey == "name" || itemKey == "quantity" || itemKey == "img") {
+            //             const field = document.createElement('td');
+            //             field.textContent = itemValue;
+            //             row.appendChild(field)
+            //         }
+            //     }
+            // )
+            // console.log({fields})
+            tbody.appendChild(row);
+        }
+        table.appendChild(tbody)
+
+    }
+    displayCartItems()
+    
+    
+</script>
+</html>
