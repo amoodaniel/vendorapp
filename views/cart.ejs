@@ -8,8 +8,8 @@
                 <td>Quantity</td>
                 <td> Sub Total</td>
             </tr>
-            <tr>
-                <td>
+            <tbody id="all-checkout-items">
+                <!-- <td>
                     <div class="cart-info">
                         <img src="public\smoothie.png">
                         <div>
@@ -20,60 +20,95 @@
                     </div>
                 </td>
                 <td><input type="number" value="1"></td>
-                <td>10045</td>
-            </tr>
+                <td>10045</td> -->
+            </tbody>
+            <br>
         </table>
         <div class="total-price">
             <table>
-                <tr>
-                    <td>Subtotal</td>
-                    <td>10450</td>
-                </tr>
-                <tr>
-                    <td>Tax</td>
-                    <td>10450</td>
-                </tr>
+                <button onclick="window.location.reload()">Update cart</button>
                 <tr>
                     <td>Total</td>
-                    <td>10450</td>
+                    <td id="total-price"></td>
                 </tr>
             </table>
 
         </div>
+        <button id="checkout">Pay and Checkout</button>
 
     </div>
-
+    <p id="useremail" style="visibility: hidden;"><%=user.email%></p> 
+    <script src="https://js.paystack.co/v1/inline.js"></script>
   </body>
+   
 
   <%- include('partials/footer'); -%>
+  </html>
 
 <script>
     let cart;
-    function RetrieveCartItems(){
-        cart = cart || localStorage.getItem('cart')
+    let totalPrice = 0;
+    function retrieveCartItems(tbody){
+        for (let item of tbody.children){
+            const totalprice=0
+            const tr = item
+            const id = Array.from(tr.children).find( el => el.id === 'product-id')
+            const itemPrice = Array.from(tr.children).find( el => el.id === 'price')
+            const itemQuantity = Array.from(tr.children).find( el => el.id === 'product-quantity')
+            const itemQuantityValue = Array.from(itemQuantity.children).find( el => el.id === 'product-quantity-value')
+            const increasebtn = Array.from(itemQuantity.children).find( el => el.id === 'increase-quantity')
+            const decreasebtn = Array.from(itemQuantity.children).find( el => el.id === 'decrease-quantity')
+            increasebtn.onclick = function () {
+                var cart = JSON.parse(localStorage.getItem('cart') || "[]") // this
+                let existingItem = cart.find(item => item.id == id.textContent); //this
+
+                if(existingItem) {
+                    if (existingItem.quantity>0){
+                        existingItem.quantity += 1;
+                        existingItem.price = existingItem.quantity * existingItem.unitPrice;
+                        itemQuantityValue.textContent = existingItem.quantity
+                        itemPrice.textContent = existingItem.price
+                    }
+                    
+                }
+                
+  
+                localStorage.setItem('cart', JSON.stringify(cart))
+            }
+
+            decreasebtn.onclick = function () {
+                var cart = JSON.parse(localStorage.getItem('cart') || "[]") // this
+                let existingItem = cart.find(item => item.id == id.textContent); //this
+
+                if(existingItem && !(existingItem.quantity-1==0)) {
+                    if (existingItem.quantity >0){
+                        existingItem.quantity -= 1;
+                        existingItem.price = existingItem.quantity * existingItem.unitPrice;
+                        itemQuantityValue.textContent = existingItem.quantity
+                        itemPrice.textContent = existingItem.price
+                    }
+                    
+                    
+                }
+                
+  
+                localStorage.setItem('cart', JSON.stringify(cart))
+            }
+            
+            
+}    
+
+        
     }
     function displayCartItems(){
-        // console.log('here')
-        // var cartdet = JSON.parse(cartusr)
-        // cartdet = 
-        // console.log(cartdet)
-
-
-        // const increasePrice = function (quantity) {
-
-        // }
-        // const decreasePrice = function (quantity) {
-
-        // }
         
         var itemsInCart = JSON.parse(localStorage.getItem('cart'))
         // create a table with js
 
         const table = document.getElementById('checkout-items');
         
-        const tbody = document.createElement('tbody');
+        const tbody = document.getElementById('all-checkout-items');
         
-        table.appendChild(tbody)
         console.log({table})
 
         for ( let item of itemsInCart ) {
@@ -81,76 +116,98 @@
             const row = document.createElement('tr');
             const fieldsTest = Object.entries(item).forEach(
                 ([key, value]) => {
-                    console.log(key)
-                    if(key !== 'id') {
-                        if(key == 'quantity') {
-                            const quantityField = document.createElement('span')
-                            const increase = document.createElement('button')
-                            const decrease = document.createElement('button')
-                            increase.textContent = "+"
-                            decrease.textContent = "-"
-                            // increase.onclick = function () {
-                            //     increasePrice(value)
-                            // }
-                            // decrease.onclick = function () {
-                            //     decreasePrice(value)
-                            // }
-                            quantityField.textContent = value
-                            quantityField.appendChild(increase)
-                            quantityField.appendChild(decrease)
-                            row.appendChild(quantityField)
-                        } 
-                        if (key == 'name') {
-                            const nameField = document.createElement('td')
-                            nameField.textContent = value
-                            row.appendChild(nameField)
+                    if(key == 'quantity') {      
+                        const quantityField = document.createElement('span')
+                        const quantityValue = document.createElement('p')
+                        quantityField.id = 'product-quantity'
+                        quantityValue.id = 'product-quantity-value'
+                        const increase = document.createElement('button')
+                        increase.id = 'increase-quantity'
+                        increase.class = 'cart-btn'
+                        const decrease = document.createElement('button')
+                        decrease.id= 'decrease-quantity'
+                        decrease.class = 'cart-btn'
+                        increase.textContent = "+"
+                        decrease.textContent = "-"
+                        // increase.onclick = function () {
+                        //     increasePrice(value)
+                        // }
+                        // decrease.onclick = function () {
+                        //     decreasePrice(value)
+                        // }
+                        quantityValue.textContent = value
+                        quantityField.appendChild(quantityValue)
+                        quantityField.appendChild(increase)
+                        quantityField.appendChild(decrease)
+                        row.appendChild(quantityField)
+                    } 
+                    if (key == 'name') {
+                        const nameField = document.createElement('td')
+                        nameField.id = 'product-name'
+                        nameField.textContent = value
+                        row.appendChild(nameField)
+                    }
+                    if (key == 'price') {
+                        const priceField = document.createElement('td');
+                        priceField.id = 'price'
+                        priceField.textContent = value
+                        totalPrice += +value
+                        row.appendChild(priceField)
+                    }
+                    if (key == 'id') {
+                        const idField = document.createElement('td');
+                        idField.style={
+                            visibilty:'hidden'
                         }
-                        if (key == 'price') {
-                            const priceField = document.createElement('td');
-                            priceField.textContent = value
-                            row.appendChild(priceField)
-                        }
+                        idField.id = 'product-id'
+                        idField.textContent = value
+                        row.appendChild(idField)
                     }
                 }
             )
-            // const fields = Object.values(item).map(
-            //     itemValue => {
-            //         const field = document.createElement('td');
-            //         const field2 = document.createElement(' ');
-            //         field2.className="cart-info";
-            //         field.textContent = itemValue;
-            //         field.appendChild(field2)
-            //         row.appendChild(field)
-                    
-            //     }
-            // )
-
-            // const fields = Object.values(item);
-            // const field1 = document.createElement('td');
-            // field1.textContent = fields[1];
-            // const field = document.createElement('td');
-            // field.textContent = fields[1];
-            // row.appendChild(field1)
-            // row.appendChild(fields[2])
-
-            // Object.entries(items).map(
-            //     ([itemKey, itemValue]) => {
-            //         console.log("here")
-            //         if(itemKey == "name" || itemKey == "quantity" || itemKey == "img") {
-            //             const field = document.createElement('td');
-            //             field.textContent = itemValue;
-            //             row.appendChild(field)
-            //         }
-            //     }
-            // )
-            // console.log({fields})
             tbody.appendChild(row);
         }
-        table.appendChild(tbody)
+        table.appendChild(tbody);
+        retrieveCartItems(tbody);
+        document.getElementById("total-price").textContent = totalPrice;
 
     }
     displayCartItems()
     
-    
+    const paymentForm = document.getElementById('checkout');
+
+    paymentForm.addEventListener("click", payWithPaystack, false);
+
+    function payWithPaystack(e) {
+
+    e.preventDefault();
+    console.log(document.getElementById("useremail"))
+
+
+
+    let handler = PaystackPop.setup({
+
+        key: "pk_test_416ac228a74b84877c1729dbeacaaaf6b1792e8f", // Replace with your public key
+
+        email: document.getElementById("useremail").textContent,
+
+        amount: document.getElementById("total-price").textContent * 100,
+
+        ref: ''+Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+
+        // label: "Optional string that replaces customer email"
+        onClose: function(){
+
+        alert('Window closed.');
+        },
+        callback: function(response){
+
+        let message = 'Payment complete! Reference: ' + response.reference;
+
+        alert(message);
+
+        }
+    });
+    handler.openIframe();
+}
 </script>
-</html>

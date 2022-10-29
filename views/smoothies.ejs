@@ -32,17 +32,18 @@
 }
 
 function addToCart(id, item) {
-  console.log(localStorage.getItem('cart'))
-  var cart = JSON.parse(localStorage.getItem('cart') || "[]")
+  console.log(localStorage.getItem('cart')) 
+  var cart = JSON.parse(localStorage.getItem('cart') || "[]") // this
   const {name, price} = item;
   let itemToAdd = {
     id,
     name, 
     quantity: 1,
     price,
+    unitPrice: price
   }
   // for duplicate items: increase the quantity
-  let existingItem = cart.find(item => item.id.toString() == itemToAdd.id.toString());
+  let existingItem = cart.find(item => item.id.toString() == itemToAdd.id.toString()); //this
 
   if(existingItem) {
     existingItem.quantity += 1;

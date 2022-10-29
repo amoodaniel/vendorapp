@@ -6,6 +6,8 @@ const e = require('express');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const smtpTransport = require('nodemailer-smtp-transport');
+const Paystack = require('paystack');
+const paystackObj = new Paystack(process.env.TEST_SECRET_KEY)
 
 //nodemailer transporter
 let transporter = nodemailer.createTransport((smtpTransport({
@@ -229,33 +231,7 @@ module.exports.PasswordReset_post = async(req,res)=>{
                                 message: "Password reset email failed",
                             })
 
-                        })
-
-    //                 })
-    //                 .catch(error => {
-    //                     console.log(error);
-    //                     res.json({
-
-    //                         status: "FAILED",
-    //                         message: "Can't save Password reset data",
-                        
-    //                     })
-
-    //                 })
-
-    //         })
-    //         .catch(error => {
-    //             console.log(error);
-    //             res.json({ 
-    //                 status: "FAILED",
-    //                 message: "Problem while trying to hash password",
-    //             })
-    //         })
-    // }
-
-//ENUN DATA TYPE
-    
-                      
+                        })                     
 
 
  }
@@ -266,4 +242,26 @@ module.exports.postProduct_get =(req,res)=>{
 }
 module.exports.cart_get =(req,res)=>{
     res.render('cart');
+}
+
+module.exports.checkout_post =async (req,res)=>{
+    // {email, amount}
+    // 20000 == 200
+    req.body.amount *= 100
+    const {status, message, data} = await paystackObj.transaction.initialize(req.body);
+    res.status(status).json({
+        message, data
+    })
+}
+// callback url
+// module.exports.verify_transaction =async (req,res)=>{
+//     // req.body.amount *= 100
+//     const {reference} = req.query
+//     const {status, message, data} = await paystackObj.transaction.verify(reference);
+//     res.status(status).json({
+//         message, data
+//     })
+// }
+module.exports.checkout_get = (req, res)=>{
+    res.render('checkout')
 }

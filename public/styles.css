@@ -76,7 +76,6 @@ button{
   text-transform: uppercase;
   font-weight: 700;
   font-size: 0.8em;
-  display: block;
   padding: 10px 16px;
   letter-spacing: 2px;
 }
@@ -177,6 +176,7 @@ td img{
 }
 
 .total-price table{
+  margin-top: 10px;
   border-top: 3px solid red;
   width: 100%;
   max-width: 350px;
@@ -186,4 +186,13 @@ td:last-child{
 }
 th:last-child{
   text-align: right;
+}
+
+
+button[id='increase-quantity']{
+  display: inline;
+}
+
+button[id='checkout']{
+  display: block;
 }

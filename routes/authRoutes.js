@@ -23,6 +23,8 @@ rou.post('/postproduct', authController.postProduct_post);
 
 rou.get('/cart', authController.cart_get);
 
+rou.get('/checkout',authController.checkout_get);
+
 rou.get('')
 
 module.exports = rou;
