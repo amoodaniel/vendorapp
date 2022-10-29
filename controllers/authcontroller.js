@@ -231,6 +231,7 @@ module.exports.checkout_post =async (req,res)=>{
 module.exports.checkout_get = (req, res)=>{
     res.render('checkout')
 module.exports.checkout_post =(req, res)=>{
+    const {emailaddr, total, reference} = req.body
     
 }
 }
