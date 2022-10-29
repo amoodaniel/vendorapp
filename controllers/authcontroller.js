@@ -154,40 +154,6 @@ module.exports.PasswordReset_post = async(req,res)=>{
         return res.status(400).send({message:"This email doesnt exist"})
     }
     SendResetEmail(email, redirectUrl, res);
-//     .then((data=>{
-//     if (data.length){
-// //         //user exists
-
-// //         //check if user is verified
-//         if(!data[0].verified){
-//             res.json({
-//                 staus: "FAILED",
-//                 message: "Email hasn't been verified yet"
-//             })
-//         }
-//         else{
-// //             //proceed with the next step
-//             SendResetEmail(date[0], redirectUrl, res);
-//         }
-
-
-//     }
-    
-//     else {
-//     res.json({
-//             status: "FAILED",
-//             message: "No account with the submitted email exists!",
-//     })
-//     }
-// }))
-
-//     .catch(error => {
-//         console.log(error);
-//         res.json({
-//             status: "FAILED",
-//             message: "An Error occurred while checking existing user",
-//         })
-//     })
 }
 // //Send password reset email
     const SendResetEmail = async(email, redirectUrl, res)=>{
@@ -264,4 +230,7 @@ module.exports.checkout_post =async (req,res)=>{
 // }
 module.exports.checkout_get = (req, res)=>{
     res.render('checkout')
+module.exports.checkout_post =(req, res)=>{
+    
+}
 }

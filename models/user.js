@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema({
     role: String,
     createdAt: Date,
     expiresAt: Date,
+    productsordered:[{ type: Schema.Types.ObjectId, ref: 'products' }]
 });
 
 // const PasswordResetSchema = new mongoose.Schema({

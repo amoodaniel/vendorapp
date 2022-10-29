@@ -203,11 +203,13 @@
         callback: function(response){
 
         let message = 'Payment complete! Reference: ' + response.reference;
-
         alert(message);
+        window.location = "http://localhost:3000/cart?reference=" + response.reference;
 
         }
     });
     handler.openIframe();
 }
+const package = {emailaddr:email,total:amount,reference:ref};
+JSON.stringify(package)
 </script>
