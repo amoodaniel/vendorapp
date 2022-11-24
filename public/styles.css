@@ -196,3 +196,6 @@ button[id='increase-quantity']{
 button[id='checkout']{
   display: block;
 }
+#product-id{
+  display: none;
+}

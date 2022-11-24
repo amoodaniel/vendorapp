@@ -200,7 +200,7 @@ module.exports.PasswordReset_post = async(req,res)=>{
                         })                     
 
 
- }
+}
 
 module.exports.postProduct_get =(req,res)=>{
     res.render('postproduct', {User: "danielamoo35@gmail.com"});
@@ -230,8 +230,36 @@ module.exports.checkout_post =async (req,res)=>{
 // }
 module.exports.checkout_get = (req, res)=>{
     res.render('checkout')
+}
 module.exports.checkout_post =(req, res)=>{
     const {emailaddr, total, reference} = req.body
     
 }
+module.exports.transaction_post = async (req,res)=>{
+    const {email} = req.body;
+
+    try {
+       var itemsInCart = JSON.parse(localStorage.getItem('cart'))
+       for ( let item of itemsInCart ) {
+        const fieldsTest = Object.entries(item).forEach(
+            ([key, value]) => {
+                if (key == 'id') {
+                    const finduser = User.findOne({email:email},{
+                        $set:{
+                            productsordered:value
+                        }
+                       });
+
+                }
+            })
+       }
+       console.log("ua");
+    
+    }
+        
+        
+    catch (error) {
+        const errors = handleErrors(error)
+        res.status(400).json({errors});
+    }
 }

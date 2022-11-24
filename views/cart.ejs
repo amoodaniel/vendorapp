@@ -90,7 +90,7 @@
                     
                     
                 }
-                
+
   
                 localStorage.setItem('cart', JSON.stringify(cart))
             }
@@ -157,11 +157,12 @@
                     if (key == 'id') {
                         const idField = document.createElement('td');
                         idField.style={
-                            visibilty:'hidden'
+                            display:'none',
                         }
                         idField.id = 'product-id'
                         idField.textContent = value
                         row.appendChild(idField)
+                        
                     }
                 }
             )
@@ -172,6 +173,7 @@
         document.getElementById("total-price").textContent = totalPrice;
 
     }
+    
     displayCartItems()
     
     const paymentForm = document.getElementById('checkout');
@@ -182,6 +184,11 @@
 
     e.preventDefault();
     console.log(document.getElementById("useremail"))
+    const res = fetch('/cart',{
+                method:'POST',
+                body: JSON.stringify({email:document.getElementById("useremail").textContent}),
+                headers:{'Content-Type': 'application/json'}
+            });
 
 
 
@@ -201,15 +208,18 @@
         alert('Window closed.');
         },
         callback: function(response){
+            console.log(response)
 
         let message = 'Payment complete! Reference: ' + response.reference;
         alert(message);
+        
+        
         window.location = "http://localhost:3000/cart?reference=" + response.reference;
-
+        localStorage.clear();
         }
+
     });
     handler.openIframe();
 }
-const package = {emailaddr:email,total:amount,reference:ref};
-JSON.stringify(package)
+
 </script>
