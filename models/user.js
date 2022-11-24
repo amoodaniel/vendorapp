@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const{isEmail}= require('validator');
 const bcrypt = require('bcrypt');
 //to create a database, create a model. To create a schema is to create a table)
-const{Schema} = mongoose;
+const Objectid = mongoose.Schema.Types.ObjectId;
 mongoose.Promise = global.Promise;
 
 
@@ -19,10 +19,10 @@ const userSchema = new mongoose.Schema({
         required: [true, 'please enter a password'],
         minlength: [6, 'minimum password length is 6 characters']
     },
+    productsordered:[{ type: Objectid, ref: 'products' }],
     role: String,
     createdAt: Date,
     expiresAt: Date,
-    productsordered:[{ type: Schema.Types.ObjectId, ref: 'products' }]
 });
 
 // const PasswordResetSchema = new mongoose.Schema({
